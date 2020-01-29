@@ -58,7 +58,7 @@ ssh -o "StrictHostKeyChecking no" -T git@github.com
 cd ~
 git clone git@github.com:indrayam/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-~/.dotfiles/setup-symlinks-unix.sh
+~/.dotfiles/setup-symlinks-linux.sh
 rm -rf ~/.vim/bundle/Vundle.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -c 'PluginInstall' -c 'qall'
