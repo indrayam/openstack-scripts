@@ -2,7 +2,7 @@
 
 # Initialize variables
 VM_PREFIX="codedemo"
-VM_NUMBER="${1:-1}"
+VM_NUMBER="${1:-bionic}"
 VM_NAME="${VM_PREFIX}-${VM_NUMBER}"
 VM_SCRIPT="bionic.sh"
 NETWORK_ID="net-id=aebcebae-06a3-4796-8713-4375b03ae0fb"

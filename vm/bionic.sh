@@ -43,15 +43,13 @@ rm install.sh*
 
 # Step 2: Setup SSH keys and pull down my .dotfiles repo
 cd ~/src
-curl -L https://storage.googleapis.com/us-east-4-anand-files/misc-files/linux-bootstrap-openssl-1_1_1.tar.gz.enc -H 'Accept: application/octet-stream' --output linux-bootstrap-openssl-1_1_1.tar.gz.enc
-openssl aes-256-cbc -d -in linux-bootstrap-openssl-1_1_1.tar.gz.enc -out linux-bootstrap.tar.gz
-tar -xvzf linux-bootstrap.tar.gz
-mv ssh/* ~/.ssh/
-mv config ~/.config
+curl -L https://storage.googleapis.com/seaz/bionic.tar.gz.enc -H 'Accept: application/octet-stream' --output bionic.tar.gz.enc
+openssl aes-256-cbc -d -in bionic.tar.gz.enc -out bionic.tar.gz
+tar -xvzf bionic.tar.gz
+mv dotfiles/ssh/* ~/.ssh/
 mkdir -p ~/.kube
-mv kube/* ~/.kube/
+mv dotfiles/kube/* ~/.kube/
 chmod 700 ~/.ssh/
-rm -rf ssh/ ssh.tar.gz
 ssh -o "StrictHostKeyChecking no" -T git@github.com
 
 # Step 3: Setup Vim
@@ -62,6 +60,7 @@ cd ~/.dotfiles
 rm -rf ~/.vim/bundle/Vundle.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -c 'PluginInstall' -c 'qall'
+git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 
 # Step 4: Final touches...
 mkdir -p ${USER_HOME}/workspace

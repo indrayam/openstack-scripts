@@ -8,8 +8,12 @@ TOKEN=xxxxxx.yyyyyy
 USER_ID="${USER_ID:-ubuntu}"
 USER_HOME="/home/${USER_ID}"
 
+# Update /etc/hosts with the proper entry
+HOST=$(hostname)
+export CTRLPLANE_IP=$(hostname -I | awk '{print $1}')
+sed -i "1s/^/${VM_IP} ${HOST}\n/" /etc/hosts
+
 ## Pre-requisite steps
-# Get things setup for Vim and Certbot
 add-apt-repository -y ppa:jonathonf/vim
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF | tee /etc/apt/sources.list.d/kubernetes.list
@@ -39,16 +43,15 @@ rm install.sh*
 
 # Step 2: Setup SSH keys and pull down my .dotfiles repo
 cd ~/src
-curl -L https://storage.googleapis.com/us-east-4-anand-files/misc-files/linux-bootstrap.tar.gz.enc -H 'Accept: application/octet-stream' --output linux-bootstrap.tar.gz.enc
-openssl aes-256-cbc -d -in linux-bootstrap.tar.gz.enc -out linux-bootstrap.tar.gz
-tar -xvzf linux-bootstrap.tar.gz
-mv ssh/* ~/.ssh/
-mv config ~/.config
+curl -L https://storage.googleapis.com/seaz/xenial-lite.tar.gz.enc -H 'Accept: application/octet-stream' --output xenial-lite.tar.gz.enc
+openssl aes-256-cbc -d -in xenial-lite.tar.gz.enc -out xenial-lite.tar.gz
+tar -xvzf xenial-lite.tar.gz
+mv dotfiles/ssh/* ~/.ssh/
 mkdir -p ~/.kube
-mv kube/* ~/.kube/
+mv dotfiles/kube/* ~/.kube/
 chmod 700 ~/.ssh/
-rm -rf ssh/ ssh.tar.gz
 ssh -o "StrictHostKeyChecking no" -T git@github.com
+git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 
 # Step 3: Setup Vim
 cd ~
@@ -58,6 +61,7 @@ cd ~/.dotfiles
 rm -rf ~/.vim/bundle/Vundle.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -c 'PluginInstall' -c 'qall'
+git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 
 # Step 4: Final touches...
 mkdir -p ${USER_HOME}/workspace
@@ -70,7 +74,7 @@ chown ${USER_ID}.${USER_ID} ${USER_HOME}/complete-os-setup.sh
 systemctl stop firewalld
 systemctl disable firewalld
 
-## Install Cloud Native tools
+## Install tools
 cd ${USER_HOME}/src
 
 ## Download binaries and/or source
@@ -90,33 +94,13 @@ chmod +x diff-so-fancy
 mv diff-so-fancy /usr/local/bin
 diff-so-fancy -v
 
-# Kubernetes Control Plane Setup
-#apt-cache madison kubeadm (to find all versions and then use that to install specific version)
-#apt-get install -y kubelet=1.14.2-00 kubeadm=1.14.2-00 kubectl=1.14.2-00 kubernetes-cni
+# Container Tools
 apt-get install -y --allow-unauthenticated docker-ce=$(apt-cache madison docker-ce | grep 19.03 | head -1 | awk '{print $3}')
-apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+apt-get install -y kubectl
 
-# Initialize Kubernetes Control Plane using kubeadm
-export CTRLPLANE_IP=$(hostname -I | awk '{print $1}')
-kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address $CTRLPLANE_IP --token $TOKEN --apiserver-cert-extra-sans 173.37.68.59
+# Upgrade the OS
+apt -y update
+apt -y upgrade
+apt -y install unattended-upgrades apt-listchanges bsd-mailx
 
-# Copying it under home directory of 'root'
-cp /etc/kubernetes/admin.conf $HOME/
-chown $(id -u):$(id -g) $HOME/admin.conf
-export KUBECONFIG=$HOME/admin.conf
-
-# Copying it under home directory of 'ubuntu'
-mkdir -p ${USER_HOME}/.kube
-cp /etc/kubernetes/admin.conf ${USER_HOME}/.kube/config
-chown ${USER_ID}.${USER_ID} ${USER_HOME}/.kube/config
-
-# Install Networking Plugin (Calico)
-# kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
-
-# Install Networking Plugin (Weave)
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
-
-# Update /etc/hosts with the proper entry
-HOST=$(hostname)
-sed -i "1s/^/${CTRLPLANE_IP} ${HOST}\n/" /etc/hosts
 
