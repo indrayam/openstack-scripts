@@ -79,6 +79,6 @@ apt-get install -y --allow-unauthenticated docker-ce=$(apt-cache madison docker-
 apt-get install -y kubectl
 
 # Upgrade the OS
-apt -y update
-apt -y upgrade
-apt -y install unattended-upgrades apt-listchanges bsd-mailx
+apt-get -y update
+apt-get -y upgrade
+apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
