@@ -61,7 +61,7 @@ git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 
 # Step 4: Final touches...
 mkdir -p /home/ubuntu/workspace
-sudo usermod -aG docker $USER
+sudo usermod -aG docker $USER_ID
 echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
 EOF
 chmod +x ${USER_HOME}/complete-os-setup.sh
@@ -96,6 +96,6 @@ apt-get install -y --allow-unauthenticated docker-ce=$(apt-cache madison docker-
 apt-get install -y kubectl
 
 # Upgrade the OS
-apt -y update
-apt -y upgrade
-apt -y install unattended-upgrades apt-listchanges bsd-mailx
+apt-get -y update
+apt-get -y upgrade
+apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
