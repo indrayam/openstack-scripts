@@ -4,7 +4,7 @@
 VM_PREFIX="codedemo"
 VM_NUMBER="${1:-xenial-lite}"
 VM_NAME="${VM_PREFIX}-${VM_NUMBER}"
-VM_SCRIPT="xenial.sh"
+VM_SCRIPT="xenial-lite.sh"
 NETWORK_ID="net-id=aebcebae-06a3-4796-8713-4375b03ae0fb"
 SSH_KEY="anand on macbook"
 FLAVOR_NAME="2vCPUx4GB"
