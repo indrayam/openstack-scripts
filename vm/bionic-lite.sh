@@ -35,7 +35,7 @@ cd /tmp
 
 # Step 2: Setup SSH keys
 curl -L https://storage.googleapis.com/seaz/bionic-lite.tar.gz.enc -H 'Accept: application/octet-stream' --output bionic-lite.tar.gz.enc
-openssl aes-256-cbc -d -in bionic-lite.tar.gz.enc -out bionic-lite.tar.gz
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -in bionic-lite.tar.gz.enc -out bionic-lite.tar.gz
 tar -xvzf bionic-lite.tar.gz
 mv dotfiles ~/.dotfiles
 
