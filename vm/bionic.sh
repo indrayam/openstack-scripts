@@ -31,28 +31,25 @@ chown -h ${USER_ID}.${USER_ID} ${USER_HOME}/src
 
 # Create a shell script to finish personalizing my non-root account setup
 cat > ${USER_HOME}/complete-os-setup.sh <<EOF
-cd ~/src
-sudo chown -R ubuntu.ubuntu ~/.kube
-
 # Step 1: Install oh-my-zsh
 cd ~/src
-sudo /usr/bin/chsh -s /usr/bin/zsh ${USER_ID}
+sudo /usr/bin/chsh -s /usr/bin/zsh ubuntu
 wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 sh install.sh --unattended
 rm install.sh*
 
-# Step 2: Setup SSH keys and pull down my .dotfiles repo
+# Step 2: Setup SSH keys
 cd ~/src
 curl -L https://storage.googleapis.com/seaz/bionic.tar.gz.enc -H 'Accept: application/octet-stream' --output bionic.tar.gz.enc
-openssl aes-256-cbc -d -in bionic.tar.gz.enc -out bionic.tar.gz
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -in bionic.tar.gz.enc -out bionic.tar.gz
 tar -xvzf bionic.tar.gz
-mv dotfiles/ssh/* ~/.ssh/
 mkdir -p ~/.kube
 mv dotfiles/kube/* ~/.kube/
+mv dotfiles/ssh/* ~/.ssh/
 chmod 700 ~/.ssh/
 ssh -o "StrictHostKeyChecking no" -T git@github.com
 
-# Step 3: Setup Vim
+# Step 3: Pull down my .dotfiles repo and setup vim, kube-ps1
 cd ~
 git clone git@github.com:indrayam/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
@@ -63,7 +60,8 @@ vim -c 'PluginInstall' -c 'qall'
 git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 
 # Step 4: Final touches...
-mkdir -p ${USER_HOME}/workspace
+mkdir -p /home/ubuntu/workspace
+sudo usermod -aG docker $USER
 echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
 EOF
 chmod +x ${USER_HOME}/complete-os-setup.sh
