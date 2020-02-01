@@ -31,42 +31,6 @@ chown -h ${USER_ID}.${USER_ID} ${USER_HOME}/src
 
 # Create a shell script to finish personalizing my non-root account setup
 cat > ${USER_HOME}/complete-os-setup.sh <<EOF
-cd ~/src
-sudo chown -R ubuntu.ubuntu ~/.kube
-
-# Step 1: Install oh-my-zsh
-cd ~/src
-sudo /usr/bin/chsh -s /usr/bin/zsh ${USER_ID}
-wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-sh install.sh --unattended
-rm install.sh*
-
-# Step 2: Setup SSH keys and pull down my .dotfiles repo
-cd ~/src
-curl -L https://storage.googleapis.com/seaz/xenial-lite.tar.gz.enc -H 'Accept: application/octet-stream' --output xenial-lite.tar.gz.enc
-openssl aes-256-cbc -d -in xenial-lite.tar.gz.enc -out xenial-lite.tar.gz
-tar -xvzf xenial-lite.tar.gz
-mv dotfiles/ssh/* ~/.ssh/
-mkdir -p ~/.kube
-mv dotfiles/kube/* ~/.kube/
-chmod 700 ~/.ssh/
-ssh -o "StrictHostKeyChecking no" -T git@github.com
-git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
-
-# Step 3: Setup Vim
-cd ~
-git clone git@github.com:indrayam/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-~/.dotfiles/setup-symlinks-linux.sh
-rm -rf ~/.vim/bundle/Vundle.vim
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-vim -c 'PluginInstall' -c 'qall'
-git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
-
-# Step 4: Final touches...
-mkdir -p ${USER_HOME}/workspace
-echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
-
 cd /tmp
 
 # Step 2: Setup SSH keys
@@ -82,7 +46,6 @@ cd ~
 # Step 4: Final touches...
 mkdir -p /home/ubuntu/workspace
 echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
-
 EOF
 chmod +x ${USER_HOME}/complete-os-setup.sh
 chown ${USER_ID}.${USER_ID} ${USER_HOME}/complete-os-setup.sh
