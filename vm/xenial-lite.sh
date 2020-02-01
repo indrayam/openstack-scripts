@@ -66,6 +66,23 @@ git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
 # Step 4: Final touches...
 mkdir -p ${USER_HOME}/workspace
 echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
+
+cd /tmp
+
+# Step 2: Setup SSH keys
+curl -L https://storage.googleapis.com/seaz/xenial-lite.tar.gz.enc -H 'Accept: application/octet-stream' --output xenial-lite.tar.gz.enc
+openssl aes-256-cbc -d -in xenial-lite.tar.gz.enc -out xenial-lite.tar.gz
+tar -xvzf xenial-lite.tar.gz
+mv dotfiles ~/.dotfiles
+
+# Step 3: Pull down my .dotfiles repo and setup vim, kube-ps1
+cd ~
+~/.dotfiles/setup-symlinks-bash.sh
+
+# Step 4: Final touches...
+mkdir -p /home/ubuntu/workspace
+echo "You're done! Remove this file, exit and log back in to enjoy your new VM"
+
 EOF
 chmod +x ${USER_HOME}/complete-os-setup.sh
 chown ${USER_ID}.${USER_ID} ${USER_HOME}/complete-os-setup.sh
