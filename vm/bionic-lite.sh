@@ -39,9 +39,11 @@ openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -in bionic-lit
 tar -xvzf bionic-lite.tar.gz
 mv dotfiles ~/.dotfiles
 
-# Step 3: Pull down my .dotfiles repo and setup vim, kube-ps1
+# Step 3: Pull down my .dotfiles repo and setup vim
 cd ~
 ~/.dotfiles/setup-symlinks-bash.sh
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
 
 # Step 4: Final touches...
 mkdir -p /home/ubuntu/workspace
