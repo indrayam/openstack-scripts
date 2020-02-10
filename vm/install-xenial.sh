@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Initialize variables
-VM_PREFIX="codedemo"
+VM_PREFIX="code"
 VM_NUMBER="${1:-xenial}"
 VM_NAME="${VM_PREFIX}-${VM_NUMBER}"
 VM_SCRIPT="xenial.sh"
