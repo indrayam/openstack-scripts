@@ -28,7 +28,7 @@ export AZ_NAME="cloud-${REGION}-1-a"
 
 # Generate token and insert into the script files
 echo "Creating a secure(ish) token for use in Kubernetes Cluster setup..."
-TOKEN=`python -c 'import random; print "%0x.%0x" % (random.SystemRandom().getrandbits(3*8), random.SystemRandom().getrandbits(8*8))'`
+TOKEN=`python2 -c 'import random; print "%0x.%0x" % (random.SystemRandom().getrandbits(3*8), random.SystemRandom().getrandbits(8*8))'`
 echo "Got it: $TOKEN"
 echo "Time to update ./${CTRLPLANE_SCRIPT_NAME} file with ${TOKEN}..."
 sed -i.bak "s/^TOKEN=.*/TOKEN=${TOKEN}/" ./${CTRLPLANE_SCRIPT_NAME}
