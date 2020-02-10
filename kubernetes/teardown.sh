@@ -44,24 +44,10 @@ rm *.bak
 # Delete all VMs
 echo "Deleting VM ${CTRLPLANE_TAG_NAME}..."
 openstack server delete ${CTRLPLANE_TAG_NAME} --wait
-echo "Deleting VM ${NODE_TAG_NAME}-1..."
-openstack server delete ${NODE_TAG_NAME}-1 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-2..."
-openstack server delete ${NODE_TAG_NAME}-2 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-3..."
-openstack server delete ${NODE_TAG_NAME}-3 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-4..."
-openstack server delete ${NODE_TAG_NAME}-4 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-5..."
-openstack server delete ${NODE_TAG_NAME}-5 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-6..."
-openstack server delete ${NODE_TAG_NAME}-6 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-7..."
-openstack server delete ${NODE_TAG_NAME}-7 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-8..."
-openstack server delete ${NODE_TAG_NAME}-8 --wait
-echo "Deleting VM ${NODE_TAG_NAME}-9..."
-openstack server delete ${NODE_TAG_NAME}-9 --wait
+for i in 1 2 3; do
+    echo "Deleting VM ${NODE_TAG_NAME}-${i}..."
+    openstack server delete ${NODE_TAG_NAME}-{i} --wait
+done
 
 # Listing the status of OpenStack VMs
 echo

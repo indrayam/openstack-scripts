@@ -21,87 +21,31 @@ if [ ! -f config/${REGION}.sh ]; then
     exit 25
 fi
 source config/${REGION}.sh
-FLAVOR_NAME="4vCPUx8GB"
+export FLAVOR_NAME="4vCPUx8GB"
+AZ_SUFFIXES=("a" "b" "c")
 
-# Kubernetes Nodes Setup
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-1..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-1
+# Kubernetes Node(s) Setup
+for i in 1 2 3; do
+    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]}
+    echo "Alright, time to create VM named ${NODE_TAG_NAME}-${i}..."
+    export AZ_NAME="cloud-${REGION}-1-${AZ_SUFFIX_SELECTED}"
+    openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
+        --availability-zone $AZ_NAME \
+        --security-group default --key-name "$SSH_KEY" \
+        --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-${i}
+done
 
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-2..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-2
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-3..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-3
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-4..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-4
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-5..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-5
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-6..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-6
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-7..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-7
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-8..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-8
-
-echo "Alright, time to create VM named ${NODE_TAG_NAME}-9..."
-openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
-    --security-group default --key-name "$SSH_KEY" \
-    --user-data ./${NODE_SCRIPT_NAME} --wait ${NODE_TAG_NAME}-9
-
-# Retrieve IP address of Nodes
-NODE1_IP=$(openstack server show ${NODE_TAG_NAME}-1 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-1: ${NODE1_IP}.."
-NODE2_IP=$(openstack server show ${NODE_TAG_NAME}-2 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-2: ${NODE2_IP}.."
-NODE3_IP=$(openstack server show ${NODE_TAG_NAME}-3 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-3: ${NODE3_IP}.."
-NODE4_IP=$(openstack server show ${NODE_TAG_NAME}-4 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-4: ${NODE4_IP}.."
-NODE5_IP=$(openstack server show ${NODE_TAG_NAME}-5 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-5: ${NODE5_IP}.."
-NODE6_IP=$(openstack server show ${NODE_TAG_NAME}-6 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-6 Droplet: ${NODE6_IP}.."
-NODE7_IP=$(openstack server show ${NODE_TAG_NAME}-7 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-7 Droplet: ${NODE7_IP}.."
-NODE8_IP=$(openstack server show ${NODE_TAG_NAME}-8 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-8 Droplet: ${NODE8_IP}.."
-NODE9_IP=$(openstack server show ${NODE_TAG_NAME}-9 -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
-echo "Here's the IP of ${NODE_TAG_NAME}-9 Droplet: ${NODE9_IP}.."
+# Retrieve IP address of Node(s) and publish the SSH command to see the logs
+for i in 1 2 3; do
+    NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
+    echo "Here's the IP of ${NODE_TAG_NAME}-${i}: ${NODE_IP}.."
+    echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE_IP} tail -f /var/log/cloud-init-output.log"
+done
 
 # Finish off
 echo
 echo "The gerbils are busy building the Kubernetes Nodes on OpenStack..."
-echo "Open two terminals and run the following commands to track their progress.."
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE1_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE2_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE3_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE4_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE5_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE6_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE7_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE8_IP} tail -f /var/log/cloud-init-output.log"
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE9_IP} tail -f /var/log/cloud-init-output.log"
+echo "Open two terminals and run the ssh commands (see above) to track their progress.."
 echo "Enjoy!"
 
 

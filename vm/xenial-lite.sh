@@ -1,16 +1,13 @@
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 
-# Replace this with the token 
-TOKEN=xxxxxx.yyyyyy
-
 # Basic Setup
 USER_ID="${USER_ID:-ubuntu}"
 USER_HOME="/home/${USER_ID}"
 
 # Update /etc/hosts with the proper entry
 HOST=$(hostname)
-export CTRLPLANE_IP=$(hostname -I | awk '{print $1}')
+export VM_IP=$(hostname -I | awk '{print $1}')
 sed -i "1s/^/${VM_IP} ${HOST}\n/" /etc/hosts
 
 ## Pre-requisite steps

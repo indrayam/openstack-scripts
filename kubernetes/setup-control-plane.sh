@@ -23,7 +23,8 @@ if [ ! -f config/${REGION}.sh ]; then
     exit 25
 fi
 source config/${REGION}.sh
-FLAVOR_NAME="4vCPUx8GB"
+export FLAVOR_NAME="4vCPUx8GB"
+export AZ_NAME="cloud-${REGION}-1-a"
 
 # Generate token and insert into the script files
 echo "Creating a secure(ish) token for use in Kubernetes Cluster setup..."
@@ -37,6 +38,7 @@ sed -i.bak "s/^TOKEN=.*/TOKEN=${TOKEN}/" ./${NODE_SCRIPT_NAME}
 # Kubernetes Control Plane Setup Start
 echo "Alright, time to create VM named ${CTRLPLANE_TAG_NAME}..."
 openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
+    --availability-zone $AZ_NAME \
     --security-group default --key-name "$SSH_KEY" \
     --user-data ./${CTRLPLANE_SCRIPT_NAME} --wait ${CTRLPLANE_TAG_NAME}
 

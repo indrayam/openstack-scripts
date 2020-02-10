@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#CTRLPLANE_IP=192.168.1.6
 CTRLPLANE_IP=111.111.111.111
 
 echo "Using Control Plane IP value of \"${CTRLPLANE_IP}\"..."
@@ -47,7 +46,8 @@ kubectl apply -f ./k8s-dashboard-user/admin-user-role.yml
 # Final message
 echo
 echo
-echo "Do not forget to set KUBECONFIG environment variable by running: export $(cat .k8s.env)"
+echo "Do not forget to set KUBECONFIG environment variable by running: "
+echo "export KUBECONFIG=$(pwd)/admin.conf"
 echo
 echo "List the Bearer token to be used for Kubernetes Dashboard login..."
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
