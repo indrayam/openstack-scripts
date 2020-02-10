@@ -58,6 +58,15 @@ rm -rf ~/.vim/bundle/Vundle.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -c 'PluginInstall' -c 'qall'
 git clone git@github.com:jonmosco/kube-ps1.git ~/.kube-ps1
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+mkdir -p ~/.oh-my-zsh/completions
+chmod -R 755 ~/.oh-my-zsh/completions
+ln -s /opt/kubectx/completion/kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
+ln -s /opt/kubectx/completion/kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
 
 # Step 4: Final touches...
 mkdir -p /home/ubuntu/workspace
@@ -76,14 +85,8 @@ cd ${USER_HOME}/src
 
 ## Download binaries and/or source
 wget -q --https-only --timestamping \
-  https://github.com/ahmetb/kubectx/archive/v0.7.1.tar.gz \
   https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy
 chown ${USER_ID}.${USER_ID} ${USER_HOME}/src/*
-
-## Install kubectx, kubens
-tar -xvzf v0.7.1.tar.gz
-chown -R ${USER_ID}.${USER_ID} kubectx-0.7.1/
-mv kubectx-0.7.1/kubectx kubectx-0.7.1/kubens /usr/local/bin
 
 ## Install diff-so-fancy
 cd ${USER_HOME}/src
