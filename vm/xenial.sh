@@ -97,9 +97,10 @@ diff-so-fancy -v
 apt-get install -y --allow-unauthenticated docker-ce=$(apt-cache madison docker-ce | grep 19.03 | head -1 | awk '{print $3}')
 apt-get install -y kubectl
 
-# Upgrade the OS
-apt -y update
-apt -y upgrade
+# Final update and upgrade
+echo "N" > /tmp/silent-configure
+apt-get -y update
+apt-get -y upgrade < /tmp/silent-configure
 apt -y install unattended-upgrades apt-listchanges bsd-mailx
 
 

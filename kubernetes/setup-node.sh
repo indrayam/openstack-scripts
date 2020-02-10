@@ -26,7 +26,8 @@ AZ_SUFFIXES=("a" "b" "c")
 
 # Kubernetes Node(s) Setup
 for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
-    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]}
+    #AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]} # If you want to generate the selections randomly
+    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[${i}]}
     echo "Alright, time to create VM named ${NODE_TAG_NAME}-${i}..."
     export AZ_NAME="cloud-${REGION}-1-${AZ_SUFFIX_SELECTED}"
     openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \

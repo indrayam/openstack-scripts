@@ -46,7 +46,7 @@ echo "Deleting VM ${CTRLPLANE_TAG_NAME}..."
 openstack server delete ${CTRLPLANE_TAG_NAME} --wait
 for i in 1 2 3; do
     echo "Deleting VM ${NODE_TAG_NAME}-${i}..."
-    openstack server delete ${NODE_TAG_NAME}-{i} --wait
+    openstack server delete ${NODE_TAG_NAME}-${i} --wait
 done
 
 # Listing the status of OpenStack VMs
