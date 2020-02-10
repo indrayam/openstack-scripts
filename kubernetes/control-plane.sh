@@ -128,11 +128,6 @@ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl versio
 
 ### Kubernetes Control Plane (END)
 
-# Upgrade the OS
-apt-get -y update
-apt-get -y upgrade
-apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
-
 
 
 

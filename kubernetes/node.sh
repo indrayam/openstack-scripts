@@ -110,8 +110,3 @@ kubeadm join --token $TOKEN $CTRLPLANE_IP:6443 --discovery-token-unsafe-skip-ca-
 
 ### Kubernetes Node (END)
 
-# Upgrade the OS
-apt-get -y update
-apt-get -y upgrade
-apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
-
