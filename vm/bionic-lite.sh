@@ -44,6 +44,7 @@ cd ~
 ~/.dotfiles/setup-symlinks-bash.sh
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
+rm ~/.fzf.zsh
 
 # Step 4: Final touches...
 mkdir -p /home/ubuntu/workspace
