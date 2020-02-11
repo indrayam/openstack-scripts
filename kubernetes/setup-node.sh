@@ -22,14 +22,14 @@ if [ ! -f config/${REGION}.sh ]; then
 fi
 source config/${REGION}.sh
 export FLAVOR_NAME="4vCPUx8GB"
-AZ_SUFFIXES=("a" "b" "c")
+AZ_SUFFIXES=("a" "b" "c" "a" "b" "c" "a" "b" "c") ##CHANGEME depending upon how many nodes necessary
 
 # Kubernetes Node(s) Setup
 for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
     # If you want to generate the selections randomly
-    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]} 
+    # AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]} 
     # If you want to just loop through a, b and c
-    # AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$(($i - 1))]}
+    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$(($i - 1))]}
     echo "Alright, time to create VM named ${NODE_TAG_NAME}-${i}..."
     export AZ_NAME="cloud-${REGION}-1-${AZ_SUFFIX_SELECTED}"
     openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
