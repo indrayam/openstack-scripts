@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CTRLPLANE_IP=64.101.116.44
+CTRLPLANE_IP=111.111.111.111
 
 echo "Using Control Plane IP value of \"${CTRLPLANE_IP}\"..."
 read -p "Should we continue? " -n 1 -r

@@ -2,7 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 
 # Replace this with the token 
-TOKEN=b4f251.adcc36ac3aaba0d6
+TOKEN=xxxxxx.yyyyyy
 
 # Basic Setup
 USER_ID="${USER_ID:-ubuntu}"

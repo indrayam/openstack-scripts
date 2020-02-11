@@ -2,8 +2,8 @@
 export DEBIAN_FRONTEND=noninteractive
 
 # Replace this with the token 
-TOKEN=b4f251.adcc36ac3aaba0d6
-CTRLPLANE_IP=64.101.116.44
+TOKEN=xxxxxx.yyyyyy
+CTRLPLANE_IP=111.111.111.111
 
 # Basic Setup
 USER_ID="${USER_ID:-ubuntu}"
