@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CTRLPLANE_IP=111.111.111.111
+CTRLPLANE_IP=64.101.116.44
 
 echo "Using Control Plane IP value of \"${CTRLPLANE_IP}\"..."
 read -p "Should we continue? " -n 1 -r
@@ -37,7 +37,7 @@ kubectl get nodes
 
 # Install Kubernetes Dashboard
 echo "Installing Kubernetes Dashboard..."
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
+kubectl apply -f kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml --namespace=kube-system
 echo "Creating an admin-user..."
 kubectl apply -f ./k8s-dashboard-user/admin-user.yml
 echo "Creating a Cluster Role Binding Role..."
@@ -54,7 +54,7 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 echo
 echo
 echo "To checkout the dashboard, run.."
-echo "kubectl --kubeconfig admin.conf proxy --port 8011"
+echo "kubectl --kubeconfig admin.conf proxy --port 8001"
 echo "Once running, open the browser and enter the following URL:"
-echo "http://localhost:8011/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
+echo "http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
 echo "Enjoy!"
