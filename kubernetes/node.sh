@@ -103,7 +103,7 @@ apt-get install -y kubectl
 echo "N" > /tmp/silent-configure
 apt-get -y update
 apt-get -y upgrade < /tmp/silent-configure
-apt -y install unattended-upgrades apt-listchanges bsd-mailx
+apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
 
 ### Kubernetes Node (START)
 ###########################
