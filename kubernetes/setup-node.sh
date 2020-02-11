@@ -25,9 +25,11 @@ export FLAVOR_NAME="4vCPUx8GB"
 AZ_SUFFIXES=("a" "b" "c")
 
 # Kubernetes Node(s) Setup
-for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
-    #AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]} # If you want to generate the selections randomly
-    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$(($i - 1))]}
+for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+    # If you want to generate the selections randomly
+    AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$RANDOM % ${#AZ_SUFFIXES[@]} ]} 
+    # If you want to just loop through a, b and c
+    # AZ_SUFFIX_SELECTED=${AZ_SUFFIXES[$(($i - 1))]}
     echo "Alright, time to create VM named ${NODE_TAG_NAME}-${i}..."
     export AZ_NAME="cloud-${REGION}-1-${AZ_SUFFIX_SELECTED}"
     openstack server create --flavor $FLAVOR_NAME --image $IMAGE_NAME --nic $NETWORK_ID \
@@ -37,7 +39,7 @@ for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
 done
 
 # Retrieve IP address of Node(s) and publish the SSH command to see the logs
-for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
+for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
     NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
     echo "Here's the IP of ${NODE_TAG_NAME}-${i}: ${NODE_IP}.."
     echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE_IP} tail -f /var/log/cloud-init-output.log"
