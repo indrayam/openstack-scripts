@@ -55,7 +55,9 @@ echo "Creating a Cluster Role Binding Role..."
 kubectl apply -f ./k8s-dashboard-user/admin-user-role.yml
 
 # Update Kubernetes Kubeconfig to all Nodes
-for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+# for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+# for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
+for i in 1; do ##CHANGEME depending upon how many nodes necessary
     NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
     echo "Uploading admin.conf to ${NODE_TAG_NAME}-${i} whose IP is ${NODE_IP}.."
     scp -o StrictHostKeyChecking=no admin.conf ubuntu@${NODE_IP}:/home/ubuntu/.kube/config

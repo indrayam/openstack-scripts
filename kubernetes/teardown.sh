@@ -44,7 +44,9 @@ rm *.bak
 # Delete all VMs
 echo "Deleting VM ${CTRLPLANE_TAG_NAME}..."
 openstack server delete ${CTRLPLANE_TAG_NAME} --wait
-for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+# for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+# for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
+for i in 1; do ##CHANGEME depending upon how many nodes necessary
     echo "Deleting VM ${NODE_TAG_NAME}-${i}..."
     openstack server delete ${NODE_TAG_NAME}-${i} --wait
 done
