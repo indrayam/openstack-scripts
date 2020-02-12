@@ -1,6 +1,17 @@
 #!/bin/bash
 
 CTRLPLANE_IP=111.111.111.111
+PROJECT_PREFIX="${1:-play1}"
+echo "Running using the prefix \"${PROJECT_PREFIX}\"..."
+read -p "Should we continue? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Quitting!!"
+    exit 1
+fi
+NODE_NAME="node"
+NODE_TAG_NAME="${PROJECT_PREFIX}-k8s-${NODE_NAME}"
 
 echo "Using Control Plane IP value of \"${CTRLPLANE_IP}\"..."
 read -p "Should we continue? " -n 1 -r
@@ -37,11 +48,18 @@ kubectl get nodes
 
 # Install Kubernetes Dashboard
 echo "Installing Kubernetes Dashboard..."
-kubectl apply -f kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml --namespace=kube-system
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
 echo "Creating an admin-user..."
 kubectl apply -f ./k8s-dashboard-user/admin-user.yml
 echo "Creating a Cluster Role Binding Role..."
 kubectl apply -f ./k8s-dashboard-user/admin-user-role.yml
+
+# Update Kubernetes Kubeconfig to all Nodes
+for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
+    NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
+    echo "Uploading admin.conf to ${NODE_TAG_NAME}-${i} whose IP is ${NODE_IP}.."
+    scp -o StrictHostKeyChecking=no admin.conf ubuntu@${NODE_IP}:/home/ubuntu/.kube/config
+done
 
 # Final message
 echo
