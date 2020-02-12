@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Initialize variables
-VM_PREFIX="code"
-VM_NUMBER="${1:-xenial-lite}"
-VM_NAME="${VM_PREFIX}-${VM_NUMBER}"
+VM_PREFIX="${1:-code}"
+VM_SUFFIX="${2:-xenial-lite}"
+VM_NAME="${VM_PREFIX}-${VM_SUFFIX}"
 VM_SCRIPT="xenial-lite.sh"
 
 export NETWORK_ID="net-id=aebcebae-06a3-4796-8713-4375b03ae0fb"
