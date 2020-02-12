@@ -76,5 +76,5 @@ echo
 echo "To checkout the dashboard, run.."
 echo "kubectl --kubeconfig admin.conf proxy --port 8001"
 echo "Once running, open the browser and enter the following URL:"
-echo "http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
+echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
 echo "Enjoy!"
