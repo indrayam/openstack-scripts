@@ -16,6 +16,6 @@ az_suffixes
 
 # How many Nodes?
 function num_of_nodes() { 
-    NUM_OF_NODES=`python -c 'for i in range(1, 4): print(i)'` ##CHANGEME depending upon how many nodes necessary
+    NUM_OF_NODES=`python2 -c 'for i in range(1, 4): print(i)'` ##CHANGEME depending upon how many nodes necessary
 }
 num_of_nodes
