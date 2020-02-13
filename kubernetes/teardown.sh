@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# How many Nodes?
+if [ ! -f config.sh ]; then
+    # Oops, something went wrong
+    echo "What happened to the configuration file! config.sh NOT FOUND :-("
+    exit 25
+fi
+source config.sh
+
 # Initialize variables
 REGION="${1:-rtp}"
 PROJECT_PREFIX="${2:-play1}"
@@ -44,9 +52,7 @@ rm *.bak
 # Delete all VMs
 echo "Deleting VM ${CTRLPLANE_TAG_NAME}..."
 openstack server delete ${CTRLPLANE_TAG_NAME} --wait
-# for i in 1 2 3 4 5 6 7 8 9; do ##CHANGEME depending upon how many nodes necessary
-# for i in 1 2 3; do ##CHANGEME depending upon how many nodes necessary
-for i in 1; do ##CHANGEME depending upon how many nodes necessary
+for i in ${NUM_OF_NODES}; do 
     echo "Deleting VM ${NODE_TAG_NAME}-${i}..."
     openstack server delete ${NODE_TAG_NAME}-${i} --wait
 done

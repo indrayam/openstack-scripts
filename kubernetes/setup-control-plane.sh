@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Sourcing the utility functions and variables
+if [ ! -f config.sh ]; then
+    # Oops, something went wrong
+    echo "What happened to the configuration file! config.sh NOT FOUND :-("
+    exit 25
+fi
+source config.sh
+
 # Initialize variables
 REGION="${1:-rtp}"
 PROJECT_PREFIX="${2:-play1}"
@@ -28,11 +36,8 @@ export AZ_NAME="cloud-${REGION}-1-a"
 
 # Generate token and insert into the script files
 echo "Creating a secure(ish) token for use in Kubernetes Cluster setup..."
-# TOKEN=`python2 -c 'import random; print "%0x.%0x" % (random.SystemRandom().getrandbits(3*8), random.SystemRandom().getrandbits(8*8))'`
-TOKEN1=`python2 -c "import random; print ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6))"`
-TOKEN2=`python2 -c "import random; print ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(16))"`
-TOKEN="${TOKEN1}.${TOKEN2}"
-echo "Got it: $TOKEN"
+generate_token
+echo "Token: $TOKEN"
 echo "Time to update ./${CTRLPLANE_SCRIPT_NAME} file with ${TOKEN}..."
 sed -i.bak "s/^TOKEN=.*/TOKEN=${TOKEN}/" ./${CTRLPLANE_SCRIPT_NAME}
 echo "Time to update ./${NODE_SCRIPT_NAME} file with ${TOKEN}..."
