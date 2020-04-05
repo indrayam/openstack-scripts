@@ -7,6 +7,7 @@ VM_NAME="${VM_PREFIX}-code"
 VM_SCRIPT="bionic.sh"
 
 echo "Running against Region \"${REGION}\" and using the prefix \"${VM_PREFIX}\"..."
+echo "VM \"${VM_NAME}\" will be created..."
 read -p "Should we continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]

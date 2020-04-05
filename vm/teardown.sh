@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Initialize variables
-PROJECT_PREFIX="${1:-play1}"
+VM_PREFIX="${1:-play1}"
 REGION="${2:-rtp}"
 VM_NAME="${VM_PREFIX}-code"
 # VM_NAME="${VM_PREFIX}-code-lite"
 
-echo "Running against Region \"${REGION}\" and using the prefix \"${PROJECT_PREFIX}\"..."
+echo "Running against Region \"${REGION}\" and using the prefix \"${VM_PREFIX}\"..."
+echo "VM \"${VM_NAME}\" will be deleted..."
 read -p "Should we continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]
