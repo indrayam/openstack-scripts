@@ -1,22 +1,28 @@
 #!/bin/bash
 
 # Initialize variables
-VM_PREFIX="${1:-code}"
-VM_SUFFIX="${2:-bionic-lite}"
-VM_NAME="${VM_PREFIX}-${VM_SUFFIX}"
+VM_PREFIX="${1:-play1}"
+REGION="${2:-rtp}"
+VM_NAME="${VM_PREFIX}-code-lite"
 VM_SCRIPT="bionic-lite.sh"
 
-export NETWORK_ID="net-id=aebcebae-06a3-4796-8713-4375b03ae0fb"
-export SSH_KEY="anand on macbook"
-export FLAVOR_NAME="2vCPUx4GB"
-export IMAGE_NAME="UBUNTU-18.04-CORE"
-export AZ_NAME="cloud-rtp-1-a"
-export OS_AUTH_URL="https://cloud-rtp-1.cisco.com:5000/v3"
-export OS_IDENTITY_API_VERSION=3
-export OS_PROJECT_NAME="${4:-CICD-POC}"
-export OS_PROJECT_DOMAIN_NAME="cisco"
-export OS_USERNAME="anasharm"
-export OS_USER_DOMAIN_NAME="cisco"
+echo "Running against Region \"${REGION}\" and using the prefix \"${VM_PREFIX}\"..."
+read -p "Should we continue? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Quitting!!"
+    exit 1
+fi
+
+if [ ! -f config/${REGION}.sh ]; then
+    # Oops, something went wrong
+    echo "The value provided for REGION (${REGION}) is invalid!"
+    exit 25
+fi
+source config/${REGION}.sh
+# export FLAVOR_NAME="4vCPUx8GB"
+# export AZ_NAME="cloud-${REGION}-1-a"
 
 # Instantiate VM
 echo "Creating VM named ${VM_NAME}..."

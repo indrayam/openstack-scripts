@@ -1,8 +1,11 @@
 #!/bin/bash
 
 # Initialize variables
-REGION="${1:-rtp}"
-PROJECT_PREFIX="${2:-play1}"
+PROJECT_PREFIX="${1:-play1}"
+REGION="${2:-rtp}"
+VM_NAME="${VM_PREFIX}-code"
+# VM_NAME="${VM_PREFIX}-code-lite"
+
 echo "Running against Region \"${REGION}\" and using the prefix \"${PROJECT_PREFIX}\"..."
 read -p "Should we continue? " -n 1 -r
 echo    # (optional) move to a new line
@@ -21,13 +24,9 @@ fi
 source config/${REGION}.sh
 
 
-# Delete all VMs
-echo "Deleting VM ${CTRLPLANE_TAG_NAME}..."
-openstack server delete ${CTRLPLANE_TAG_NAME} --wait
-for i in ${NUM_OF_NODES}; do 
-    echo "Deleting VM ${NODE_TAG_NAME}-${i}..."
-    openstack server delete ${NODE_TAG_NAME}-${i} --wait
-done
+# Delete VM
+echo "Deleting VM ${VM_NAME}..."
+openstack server delete ${VM_NAME} --wait
 
 # Listing the status of OpenStack VMs
 echo
