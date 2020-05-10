@@ -31,30 +31,15 @@ then
     exit 1
 fi
 
-read -p "Should we pull down \"admin.conf\" from \"${CTRLPLANE_IP}\"? " -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    # Pull down Kubernetes Cluster Configuration
-    echo "Pulling down the Kubernetes Cluster Configuration..."
-    if [ -z ${BASTION_HOST+x} ]; then
-        echo "BASTION_HOST is unset"
-        scp -o StrictHostKeyChecking=no ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
-    else
-        echo "BASTION_HOST is set to ${BASTION_HOST}"
-        scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p ubuntu@${BASTION_HOST}" ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
-        sed -i.bak "s/^    server:.*/    server: https:\/\/${K8S_CTLPLANE_IP}:6443/" ./admin.conf
-    fi
-    
-fi
-
-read -p "Your admin.conf might have reference to private IP. Should we exit and fix the admin.conf file? " -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    # Quitting to fix the admin.conf file
-    echo "Quitting!!"
-    exit 1
+# Pull down Kubernetes Cluster Configuration
+echo "Pulling down the Kubernetes Cluster Configuration..."
+if [ -z ${BASTION_HOST+x} ]; then
+    echo "BASTION_HOST is unset"
+    scp -o StrictHostKeyChecking=no ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+else
+    echo "BASTION_HOST is set to ${BASTION_HOST}"
+    scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p ubuntu@${BASTION_HOST}" ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+    sed -i.bak "s/^    server:.*/    server: https:\/\/${K8S_CTLPLANE_IP}:6443/" ./admin.conf
 fi
 
 # Confirm the creation of Nodes
@@ -85,10 +70,6 @@ for i in ${NUM_OF_NODES}; do
 done
 
 # Final message
-echo
-echo
-echo "Do not forget to set KUBECONFIG environment variable by running: "
-echo "export KUBECONFIG=$(pwd)/admin.conf"
 echo
 echo "List the Bearer token to be used for Kubernetes Dashboard login..."
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
