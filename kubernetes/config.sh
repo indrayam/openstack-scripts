@@ -6,8 +6,8 @@ export K8S_NODES="7" ##CHANGEME depending upon how many nodes necessary
 # Are we setting this up behind a Bastion Host?
 # Run "o server list" to get BASTION_HOST
 # Run "o floating ip list" to select K8S_CTLPLANE_IP
-export BASTION_HOST="173.37.28.222" ##CHANGEME depending upon whether this is for a closed VPC or open VPC
-export K8S_CTLPLANE_IP="173.37.28.229" ##CHANGEME depending upon whether this is for a closed VPC or open VPC
+export BASTION_HOST="173.37.68.58" ##CHANGEME depending upon whether this is for a closed VPC or open VPC
+export K8S_CTLPLANE_IP="173.37.68.80" ##CHANGEME depending upon whether this is for a closed VPC or open VPC
 
 # Generate TOKEN
 function generate_token() {
