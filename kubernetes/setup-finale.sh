@@ -10,8 +10,10 @@ if [ ! -f config.sh ]; then
 fi
 source config.sh
 
+# Initialize variables
 PROJECT_PREFIX="${1:-play1}"
-echo "Running using the prefix \"${PROJECT_PREFIX}\"..."
+REGION="${2:-rtp}"
+echo "Running against Region \"${REGION}\" and using the prefix \"${PROJECT_PREFIX}\"..."
 read -p "Should we continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -21,15 +23,6 @@ then
 fi
 NODE_NAME="node"
 NODE_TAG_NAME="${PROJECT_PREFIX}-k8s-${NODE_NAME}"
-
-echo "Using Control Plane IP value of \"${CTRLPLANE_IP}\"..."
-read -p "Should we continue? " -n 1 -r
-echo    # (optional) move to a new line
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    echo "Quitting!!"
-    exit 1
-fi
 
 # Pull down Kubernetes Cluster Configuration
 echo "Pulling down the Kubernetes Cluster Configuration..."
