@@ -9,8 +9,8 @@ fi
 source config.sh
 
 # Initialize variables
-REGION="${1:-rtp}"
-PROJECT_PREFIX="${2:-play1}"
+PROJECT_PREFIX="${1:-play1}"
+REGION="${2:-rtp}"
 echo "Running against Region \"${REGION}\" and using the prefix \"${PROJECT_PREFIX}\"..."
 read -p "Should we continue? " -n 1 -r
 echo    # (optional) move to a new line

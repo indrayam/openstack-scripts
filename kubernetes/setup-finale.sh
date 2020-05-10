@@ -37,7 +37,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Pull down Kubernetes Cluster Configuration
     echo "Pulling down the Kubernetes Cluster Configuration..."
-    scp -o StrictHostKeyChecking=no ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+    if [ -z ${BASTION_HOST+x} ]; then
+        echo "BASTION_HOST is unset"
+        scp -o StrictHostKeyChecking=no ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+    else
+        echo "BASTION_HOST is set to ${BASTION_HOST}"
+        scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p ubuntu@${BASTION_HOST}" ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+    fi
+    
 fi
 
 read -p "Your admin.conf might have reference to private IP. Should we exit and fix the admin.conf file? " -n 1 -r
@@ -67,7 +74,13 @@ kubectl apply -f ./k8s-dashboard-user/admin-user-role.yml
 for i in ${NUM_OF_NODES}; do 
     NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
     echo "Uploading admin.conf to ${NODE_TAG_NAME}-${i} whose IP is ${NODE_IP}.."
-    scp -o StrictHostKeyChecking=no admin.conf ubuntu@${NODE_IP}:/home/ubuntu/.kube/config
+    if [ -z ${BASTION_HOST+x} ]; then
+        echo "BASTION_HOST is unset"
+        scp -o StrictHostKeyChecking=no admin.conf ubuntu@${NODE_IP}:/home/ubuntu/.kube/config
+    else
+        echo "BASTION_HOST is set to ${BASTION_HOST}"
+        scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p ubuntu@${BASTION_HOST}" admin.conf ubuntu@${NODE_IP}:/home/ubuntu/.kube/config
+    fi
 done
 
 # Final message

@@ -42,6 +42,13 @@ echo "Time to update ./${CTRLPLANE_SCRIPT_NAME} file with ${TOKEN}..."
 sed -i.bak "s/^TOKEN=.*/TOKEN=${TOKEN}/" ./${CTRLPLANE_SCRIPT_NAME}
 echo "Time to update ./${NODE_SCRIPT_NAME} file with ${TOKEN}..."
 sed -i.bak "s/^TOKEN=.*/TOKEN=${TOKEN}/" ./${NODE_SCRIPT_NAME}
+if [ -z ${ELASTIC_IP+x} ]; then
+    echo "ELASTIC_IP is unset"
+else
+    echo "ELASTIC_IP is set to ${ELASTIC_IP}"
+    echo "Time to update ./${CTRLPLANE_SCRIPT_NAME} file with ${ELASTIC_IP}..."
+    sed -i.bak "s/^ADDITIONAL_IP=.*/ADDITIONAL_IP=${ELASTIC_IP}/" ./${CTRLPLANE_SCRIPT_NAME}
+fi
 
 # Kubernetes Control Plane Setup Start
 echo "Alright, time to create VM named ${CTRLPLANE_TAG_NAME}..."
@@ -62,6 +69,12 @@ sed -i.bak "s/^CTRLPLANE_IP=.*/CTRLPLANE_IP=${CTRLPLANE_IP}/" ./${FINALE_SCRIPT_
 echo
 echo "The gerbils are busy building the Kubernetes Control Plane Droplet on OpenStack..."
 echo "Open a terminal and run the following commands to track the progress.."
-echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${CTRLPLANE_IP} tail -f /var/log/cloud-init-output.log"
+if [ -z ${BASTION_HOST+x} ]; then
+    echo "BASTION_HOST is unset"
+    echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${CTRLPLANE_IP} tail -f /var/log/cloud-init-output.log"
+else
+    echo "BASTION_HOST is set to ${BASTION_HOST}"
+    echo "ssh -o \"StrictHostKeyChecking no\" -o ProxyCommand=\"ssh -W %h:%p ubuntu@${BASTION_HOST}\" -T ubuntu@${CTRLPLANE_IP} tail -f /var/log/cloud-init-output.log"
+fi
 echo "Enjoy!"
 

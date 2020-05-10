@@ -131,7 +131,8 @@ apt-get install -y kubelet kubeadm kubernetes-cni
 
 # Initialize Kubernetes Control Plane using kubeadm
 # add  --apiserver-cert-extra-sans 173.37.68.59 (if necessary)
-kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address $VM_IP --token $TOKEN
+ADDITIONAL_IP=1.1.1.1
+kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address $VM_IP --apiserver-cert-extra-sans $ADDITIONAL_IP --token $TOKEN
 
 # Copying it under home directory of 'root'
 cp /etc/kubernetes/admin.conf $HOME/

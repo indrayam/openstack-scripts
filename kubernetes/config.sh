@@ -11,6 +11,7 @@ function generate_token() {
 # Suffixes for the AZ in our Data Center
 function az_suffixes() { 
     AZ_SUFFIXES=("a" "b" "c") ##CHANGEME depending upon how many nodes necessary
+    # AZ_SUFFIXES=("a" "b" "c" "a" "b") ##CHANGEME depending upon how many nodes necessary
     # AZ_SUFFIXES=("a" "b" "c" "a" "b" "c" "a") ##CHANGEME depending upon how many nodes necessary
 }
 az_suffixes
@@ -18,6 +19,11 @@ az_suffixes
 # How many Nodes?
 function num_of_nodes() { 
     NUM_OF_NODES=`python -c 'for i in range(1, 4): print(i)'` ##CHANGEME depending upon how many nodes necessary
+    # NUM_OF_NODES=`python -c 'for i in range(1, 6): print(i)'` ##CHANGEME depending upon how many nodes necessary
     # NUM_OF_NODES=`python -c 'for i in range(1, 8): print(i)'` ##CHANGEME depending upon how many nodes necessary
 }
 num_of_nodes
+
+# Are we setting this up behind a Bastion Host?
+# export BASTION_HOST="173.37.68.58" ##CHANGEME depending upon whether this is for a closed VPC or open VPC
+# export ELASTIC_IP="173.37.68.59" ##CHANGEME depending upon whether this is for a closed VPC or open VPC

@@ -50,7 +50,13 @@ done
 for i in ${NUM_OF_NODES}; do 
     NODE_IP=$(openstack server show ${NODE_TAG_NAME}-${i} -f json | jq '.addresses' | sed s/\"//g | cut -d'=' -f2)
     echo "Here's the IP of ${NODE_TAG_NAME}-${i}: ${NODE_IP}.."
-    echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE_IP} tail -f /var/log/cloud-init-output.log"
+    if [ -z ${BASTION_HOST+x} ]; then
+        echo "BASTION_HOST is unset"
+        echo "ssh -o \"StrictHostKeyChecking no\" -T ubuntu@${NODE_IP} tail -f /var/log/cloud-init-output.log"
+    else
+        echo "BASTION_HOST is set to ${BASTION_HOST}"
+        echo "ssh -o \"StrictHostKeyChecking no\" -o ProxyCommand=\"ssh -W %h:%p ubuntu@${BASTION_HOST}\" -T ubuntu@${NODE_IP} tail -f /var/log/cloud-init-output.log"
+    fi
 done
 
 # Finish off
