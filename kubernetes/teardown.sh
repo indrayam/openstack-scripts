@@ -47,6 +47,7 @@ sed -i.bak "s/^CTRLPLANE_IP=.*/CTRLPLANE_IP=111.111.111.111/" ./node.sh
 sed -i.bak "s/^TOKEN=.*/TOKEN=xxxxxx.yyyyyy/" ./node.sh
 echo "Reverting ./control-plane.sh back to its original condition..."
 sed -i.bak "s/^TOKEN=.*/TOKEN=xxxxxx.yyyyyy/" ./control-plane.sh
+sed -i.bak "s/^ADDITIONAL_IP=.*/ADDITIONAL_IP=1.1.1.1/" ./control-plane.sh
 rm *.bak
 
 # Delete all VMs
