@@ -43,6 +43,7 @@ then
     else
         echo "BASTION_HOST is set to ${BASTION_HOST}"
         scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p ubuntu@${BASTION_HOST}" ubuntu@${CTRLPLANE_IP}:/home/ubuntu/.kube/config admin.conf
+        sed -i.bak "s/^    server:.*/    server: https:\/\/${K8S_CTLPLANE_IP}:6443/" ./admin.conf
     fi
     
 fi
