@@ -3,7 +3,8 @@
 # Initialize variables
 VM_PREFIX="${1:-play1}"
 REGION="${2:-rtp}"
-VM_NAME="${VM_PREFIX}-code"
+# VM_NAME="${VM_PREFIX}-code"
+VM_NAME="${VM_PREFIX}"
 VM_SCRIPT="bionic.sh"
 
 echo "Running against Region \"${REGION}\" and using the prefix \"${VM_PREFIX}\"..."
