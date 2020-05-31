@@ -22,7 +22,7 @@ if [ ! -f config/${REGION}.sh ]; then
     exit 25
 fi
 source config/${REGION}.sh
-# export FLAVOR_NAME="4vCPUx8GB"
+export FLAVOR_NAME="4vCPUx8GB"
 # export AZ_NAME="cloud-${REGION}-1-a"
 
 # Instantiate VM
