@@ -130,7 +130,7 @@ apt-get -y install unattended-upgrades apt-listchanges bsd-mailx
 apt-get install -y kubelet kubeadm kubernetes-cni
 
 # Initialize Kubernetes Control Plane using kubeadm
-# add  --apiserver-cert-extra-sans 173.37.68.59 (if necessary)
+# add --apiserver-cert-extra-sans 173.37.68.59 (if necessary)
 ADDITIONAL_IP=1.1.1.1
 kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address $VM_IP --apiserver-cert-extra-sans $ADDITIONAL_IP --token $TOKEN
 
